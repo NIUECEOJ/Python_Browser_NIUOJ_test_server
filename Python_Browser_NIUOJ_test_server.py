@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -18,7 +19,11 @@ def upload_file():
     if file.filename == '':
         return jsonify({'message': 'No selected file'}), 400
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
+        # 獲取當前時間並格式化為 yyyymmddhhmmss
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        # 將時間戳記加入檔名
+        filename = secure_filename(f'{timestamp}_status.log')
+        
         # 獲取上傳者的IP地址
         uploader_ip = request.remote_addr
         # 檢查IP地址是否符合特定格式（例如：192.168.6.X）
